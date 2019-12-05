@@ -58,7 +58,7 @@ def main():
 		#finding all mail
 		mails = re.findall(pattern_mail, str(first))
 		mails = set(mail.lower() for mail in mails)
-		#fainding all phones
+		#finding all phones
 		phones = re.findall(pattern_phone_1, str(first))
 		phones += [phone.replace(' ', '').replace('+', '').replace('-', '') for \
 							phone in re.findall(pattern_phone_2, str(first))]
