@@ -81,7 +81,7 @@ class BinaryTree:
             for current_node in tmp:
                 if current_node is None: 
                     tmp_result.append(None)
-                    for i in range(2):
+                    for _ in range(2):
                         tmp_next.append(None)
                     continue
                 tmp_result.append(current_node.value)
@@ -140,7 +140,8 @@ class BinaryTree:
         (True, True, False)
         """
         if self.root is not None:
-            if item in self: return
+            if item in self:
+                return
             self.__insert(item, self.root)
             # self.type = type(item)
         else:

@@ -28,17 +28,17 @@ self.__values - для зранения значений
 >>> del table['house']
 >>> table.values
 [None, None, 194, 'value', '!#!#!', None, None, None, None, None, None]
->>> table.values = [1, 4]
-Traceback (most recent call last):
-...
-AttributeError: can't set attribute
 """
 
 
-class OverflowTable(Exception): pass  # исключение для переполнения таблицы
+class OverflowTable(Exception):
+    # исключение для переполнения таблицы
+    pass
 
 
-class EmptyTable(Exception): pass  # исключение для пустой таблицы
+class EmptyTable(Exception):
+    # исключение для пустой таблицы
+    pass
 
 
 class HashTable:
@@ -65,7 +65,7 @@ class HashTable:
         self.put(key, value)
 
     def __delitem__(self, key):
-        ''' Метод удаления элемента по ключю '''
+        """ Метод удаления элемента по ключю """
         self.remove(key)
 
     @property
@@ -94,8 +94,7 @@ class HashTable:
             if len(key) <= 5:
                 hash_val = sum(ord(key[i]) * (i + 1) for i in range(len(key)))
             else:
-                hash_val = sum(ord(key[i]) * (i + 1) for i in (len(key) - 1,
-                                                               len(key) // 2, 0))
+                hash_val = sum(ord(key[i]) * (i + 1) for i in (len(key) - 1, len(key) // 2, 0))
         elif isinstance(key, int):
             hash_val = key
         return hash_val % self.__size
@@ -131,25 +130,23 @@ class HashTable:
             raise ValueError('Invalid key')
         hash_val = self.__hash_function(key) if hash_new is None else hash_new
         # если новое значение
-        if (self.__values[hash_val] is None):
+        if self.__values[hash_val] is None:
             self.__values[hash_val] = value
             self.__keys[hash_val] = key
             self.__fill += 1
         # если такой ключ уже есть
-        elif (self.__keys[hash_val] == key):
+        elif self.__keys[hash_val] == key:
             self.__values[hash_val] = value
             self.__keys[hash_val] = key
         # если пришли второй раз и не нашли такого значения
-        elif (self.__keys[hash_val] == '!#!#!' and not first):
+        elif self.__keys[hash_val] == '!#!#!' and not first:
             self.__values[hash_val] = value
             self.__keys[hash_val] = key
             self.__fill += 1
         else:
             start_hash = hash_val
             hash_val = self.__rehash(start_hash)
-            while (self.__keys[hash_val] is not None and
-                   self.__keys[hash_val] != key and
-                   start_hash != hash_val and
+            while (self.__keys[hash_val] is not None and self.__keys[hash_val] != key and start_hash != hash_val and
                    (self.__keys[hash_val] != '!#!#!' and not first)):
                 hash_val = self.__rehash(hash_val)  
             self.put(key, value, hash_new=hash_val, first=False)
@@ -173,9 +170,7 @@ class HashTable:
         else:
             start_hash = hash_val
             new_hash = self.__rehash(hash_val)
-            while (self.__keys[new_hash] is not None and
-                   self.__keys[new_hash] != key and
-                   start_hash != new_hash):
+            while self.__keys[new_hash] is not None and self.__keys[new_hash] != key and start_hash != new_hash:
                 new_hash = self.__rehash(new_hash)
             if self.__keys[new_hash] == key:
                 return self.__values[new_hash]
@@ -212,10 +207,9 @@ class HashTable:
             self.__keys[hash_val] = '!#!#!'
             self.__fill -= 1
         else:
+            start_hash = hash_val
             new_hash = self.__rehash(hash_val)
-            while (self.__keys[new_hash] is not None and
-                   self.__keys[new_hash] != key and
-                   start_hash != new_hash):
+            while self.__keys[new_hash] is not None and self.__keys[new_hash] != key and start_hash != new_hash:
                 new_hash = self.__rehash(new_hash)
             if self.__keys[new_hash] == key:
                 self.__values[new_hash] = '!#!#!'
@@ -230,25 +224,25 @@ if __name__ == '__main__':
     import time
     import random
     doctest.testmod()
-    table_size = 3571 # большое простое число
-    steps = 1000 # кол-во шагов для получения среднего
-    time_inset_30 = [None] * steps
-    time_search_30 = [None] * steps
-    time_inset_100 = [None] * steps
-    time_search_100 = [None] * steps
+    table_size = 3571  # большое простое число
+    steps = 1000  # кол-во шагов для получения среднего
+    time_inset_30 = [0.0] * steps
+    time_search_30 = [0.0] * steps
+    time_inset_100 = [0.0] * steps
+    time_search_100 = [0.0] * steps
     # при заполнении на 30%
     for k in range(steps):
         keys = [random.choice(range(50)) for x in range(table_size//3)]
         table = HashTable(table_size)
         start_time = time.process_time()
-        for key in keys:
-            table[key] = key
+        for key_ in keys:
+            table[key_] = key_
         time_inset_30[k] = time.process_time() - start_time
         # print('Время вставки при заполнении 30%: {0:.6f}'.format(time.process_time() - start_time))
         start_time = time.process_time()
         random.shuffle(keys)
-        for key in keys:
-            tmp = table[key]
+        for key_ in keys:
+            tmp = table[key_]
         time_search_30[k] = time.process_time() - start_time
         # print('Время поиска при заполнении 30%: {0:.6f}'.format(time.process_time() - start_time))
     # при заполнении на 100%
@@ -256,14 +250,14 @@ if __name__ == '__main__':
         keys = [random.choice(range(50)) for x in range(table_size)]
         table = HashTable(table_size)
         start_time = time.process_time()
-        for key in keys:
-            table[key] = key
+        for key_ in keys:
+            table[key_] = key_
         time_inset_100[k] = time.process_time() - start_time
         # print('Время вставки при заполнении 100%: {0:.6f}'.format(time.process_time() - start_time))
         start_time = time.process_time()
         random.shuffle(keys)
-        for key in keys:
-            tmp = table[key]
+        for key_ in keys:
+            tmp = table[key_]
         time_search_100[k] = time.process_time() - start_time
         # print('Время поиска при заполнении 100%: {0:.6f}'.format(time.process_time() - start_time))
     print('При заполнении таблицы на 30%: ')

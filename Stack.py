@@ -37,7 +37,7 @@ class Stack:
 
     @property 
     def items(self):
-    	return self.__items
+        return self.__items.copy()
 
     def is_empty(self):
         return not bool(self.__items)
@@ -56,5 +56,5 @@ class Stack:
 
 
 if __name__ == '__main__':
-	import doctest
-	doctest.testmod()
+    import doctest
+    doctest.testmod()

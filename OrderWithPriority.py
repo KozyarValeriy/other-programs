@@ -40,12 +40,14 @@ Priority: |     1|     2|     3|     4|
 """
 
 
-class InvalidPriorityLevel(Exception): pass # Исключение при неправильном приоритете
+class InvalidPriorityLevel(Exception):
+    # Исключение при неправильном приоритете
+    pass
 
 
 class OrderWithPriority:
 
-    def __init__(self, max_priority_level:int=10):
+    def __init__(self, max_priority_level: int = 10):
         """ Constructor 
         >>> order = OrderWithPriority(4)
         >>> order.is_empty()
@@ -55,7 +57,7 @@ class OrderWithPriority:
         """
         self.__max_len_str = 4
         self.max_priority_level = max_priority_level
-        self.__order = [None] * max_priority_level
+        self.__order = list([] for _ in range(max_priority_level))  # [None] * max_priority_level
 
     def __str__(self):
         """ Метод для вывода на печать очереди """
@@ -64,24 +66,24 @@ class OrderWithPriority:
         for i in range(2, len(self.__order) + 2):
             pattern += '|{' + str(i) + ': >{1}}'
         pattern += '|\n'
-        head = pattern.format('Priority: ', self.__max_len_str, 
-                                       *range(1, len(self.__order) + 1))
+        head = pattern.format('Priority: ', self.__max_len_str, *range(1, len(self.__order) + 1))
         body += head
         body += '{0:-^{1}s}|\n'.format('-', len(head) - 2)
         step = 0
         while True:
             line = []
             for level in self.__order:
-                if level is None or len(level) <= step:
+                if not level or len(level) <= step:
                     line.append("None")
                 else:
                     line.append(level[step])
-            if all(el == "None" for el in line): break
+            if all(el == "None" for el in line):
+                break
             step += 1
             body += pattern.format(step, self.__max_len_str, *line)
         return body.rstrip()
 
-    def enqueue(self, item, priority:int):
+    def enqueue(self, item, priority: int):
         """ Метод для добавления элемента в очередь
 
         >>> order = OrderWithPriority(4)
@@ -97,10 +99,12 @@ class OrderWithPriority:
         """
         if not (0 < priority <= self.max_priority_level):
             raise InvalidPriorityLevel('Invalid priority level. '
-                                    f'Must be in [1..{self.max_priority_level}]')
+                                       f'Must be in [1..{self.max_priority_level}]')
         self.__max_len_str = len(str(item)) + 1
-        if self.__max_len_str > 50: self.__max_len_str = 50
-        elif self.__max_len_str < 5: self.__max_len_str = 5
+        if self.__max_len_str > 50:
+            self.__max_len_str = 50
+        elif self.__max_len_str < 5:
+            self.__max_len_str = 5
         if not self.__order[priority - 1]:
             self.__order[priority - 1] = [item]
         else:
@@ -124,12 +128,13 @@ class OrderWithPriority:
         """
         item = None
         for level in range(self.max_priority_level):
-            if self.__order[level] is None: continue
+            if not self.__order[level]:
+                continue
             item = self.__order[level][0]
             self.__order[level].remove(item)
-            #item = self.__order[level].pop()
+            # item = self.__order[level].pop()
             if len(self.__order[level]) == 0: 
-                self.__order[level] = None
+                self.__order[level] = []
             break
         return item
 

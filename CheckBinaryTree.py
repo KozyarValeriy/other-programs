@@ -75,6 +75,3 @@ def is_binary_tree(node, left: str, right: str, data: str) -> bool:
 if __name__ == '__main__':
     import doctest
     doctest.testmod()
-
-
-
